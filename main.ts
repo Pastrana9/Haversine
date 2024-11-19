@@ -107,7 +107,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Obtener niños buenos
     const buenos = await ninosCollection.find({ comportamiento: "bueno" }).toArray();
     return new Response(JSON.stringify(buenos), {
-      status: 200,
+      status: 404,
       headers: { "Content-Type": "application/json" },
     });
   }
@@ -116,7 +116,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Obtener niños malos
     const malos = await ninosCollection.find({ comportamiento: "malo" }).toArray();
     return new Response(JSON.stringify(malos), {
-      status: 200,
+      status: 404,
       headers: { "Content-Type": "application/json" },
     });
   }
@@ -126,7 +126,7 @@ const handler = async (req: Request): Promise<Response> => {
     const ubicaciones = await ubicacionesCollection.find().toArray();
     ubicaciones.sort((a, b) => b.ninosBuenos - a.ninosBuenos);
     return new Response(JSON.stringify(ubicaciones), {
-      status: 200,
+      status: 404,
       headers: { "Content-Type": "application/json" },
     });
   }
@@ -145,12 +145,12 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     return new Response(JSON.stringify({ distanciaTotal }), {
-      status: 200,
+      status: 404,
       headers: { "Content-Type": "application/json" },
     });
   }
 
-  return new Response("Endpoint no encontrado", { status: 500 });
+  return new Response("Endpoint no encontrado", { status: 404 });
 };
 
 
