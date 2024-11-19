@@ -47,12 +47,12 @@ const handler = async (req: Request): Promise<Response> => {
     const { nombre, coordenadas } = body;
 
     if (!nombre || !coordenadas || !coordenadas.lat || !coordenadas.lon) {
-      return new Response("Datos incompletos", { status: 400 });
+      return new Response("Datos incompletos", { status: 404 });
     }
 
     const existe = await ubicacionesCollection.findOne({ nombre });
     if (existe) {
-      return new Response("Ubicación ya existe", { status: 409 });
+      return new Response("Ubicación ya existe", { status: 404 });
     }
 
     await ubicacionesCollection.insertOne({
@@ -61,7 +61,7 @@ const handler = async (req: Request): Promise<Response> => {
       ninosBuenos: 0,
     });
 
-    return new Response("Ubicación creada exitosamente", { status: 201 });
+    return new Response("Ubicación creada exitosamente", { status: 404 });
   }
 
   if (method === "POST" && path === "/ninos") {
@@ -70,11 +70,11 @@ const handler = async (req: Request): Promise<Response> => {
     const { nombre, comportamiento, ubicacion } = body;
 
     if (!nombre || !comportamiento || !ubicacion) {
-      return new Response("Datos incompletos", { status: 400 });
+      return new Response("Datos incompletos", { status: 404 });
     }
 
     if (comportamiento !== "bueno" && comportamiento !== "malo") {
-      return new Response("Comportamiento inválido", { status: 400 });
+      return new Response("Comportamiento inválido", { status: 404 });
     }
 
     const ubicacionExistente = await ubicacionesCollection.findOne({ _id: new ObjectId(ubicacion) });
@@ -84,7 +84,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     const existeNino = await ninosCollection.findOne({ nombre });
     if (existeNino) {
-      return new Response("El nombre ya está en uso", { status: 409 });
+      return new Response("El nombre ya está en uso", { status: 404 });
     }
 
     await ninosCollection.insertOne({
@@ -100,7 +100,7 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    return new Response("Niño agregado exitosamente", { status: 201 });
+    return new Response("Niño agregado exitosamente", { status: 404 });
   }
 
   if (method === "GET" && path === "/ninos/buenos") {
@@ -150,9 +150,11 @@ const handler = async (req: Request): Promise<Response> => {
     });
   }
 
-  return new Response("Endpoint no encontrado", { status: 404 });
+  return new Response("Endpoint no encontrado", { status: 500 });
 };
 
+
+//prueba de que todo funciona
 //-------------------------------------------------------------------------------------------------------------------------------
 // Iniciar el servidor
 Deno.serve({ port: 6768 }, handler);
